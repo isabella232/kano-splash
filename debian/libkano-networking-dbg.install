@@ -1,2 +1,0 @@
-#!/usr/bin/dh-exec
-libs/kano-networking/debug/libkano_networking.so => usr/lib/debug/usr/lib/libkano_networking.so.1
