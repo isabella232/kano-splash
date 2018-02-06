@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=source
 set BUILDDIR=build
-set SPHINXPROJ=kano-toolset
+set SPHINXPROJ=kano-splash
 
 if "%1" == "" goto help
 

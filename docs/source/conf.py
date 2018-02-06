@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# kano-toolset documentation build configuration file, created by
+# kano-splash documentation build configuration file, created by
 # sphinx-quickstart on Fri Jan 12 17:50:02 2018.
 #
 # This file is execfile()d with the current directory set to its
@@ -64,7 +64,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'kano-toolset'
+project = u'kano-splash'
 copyright = u'2018, Kano Computing Ltd.'
 author = u'Kano Computing Ltd.'
 
@@ -150,7 +150,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'kano-toolsetdoc'
+htmlhelp_basename = 'kano-splashdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -177,7 +177,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'kano-toolset.tex', u'kano-toolset Documentation',
+    (master_doc, 'kano-splash.tex', u'kano-splash Documentation',
      u'Kano Computing Ltd.', 'manual'),
 ]
 
@@ -187,7 +187,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'kano-toolset', u'kano-toolset Documentation',
+    (master_doc, 'kano-splash', u'kano-splash Documentation',
      [author], 1)
 ]
 
@@ -198,8 +198,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'kano-toolset', u'kano-toolset Documentation',
-     author, 'kano-toolset', 'One line description of project.',
+    (master_doc, 'kano-splash', u'kano-splash Documentation',
+     author, 'kano-splash', 'One line description of project.',
      'Miscellaneous'),
 ]
 

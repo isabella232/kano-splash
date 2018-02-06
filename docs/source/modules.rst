@@ -1,4 +1,4 @@
-kano-toolset
+kano-splash
 ================
 
 .. toctree::
