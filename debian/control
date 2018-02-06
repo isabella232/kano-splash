@@ -1,110 +1,15 @@
-Source: kano-toolset
+Source: kano-splash
 Maintainer: Team Kano <dev@kano.me>
 Section: admin
 Priority: optional
 Standards-Version: 3.9.2
 Build-Depends: debhelper (>= 9), dh-exec, libraspberrypi-dev, libpng12-dev,
-               python-dev, gcc, g++, gettext
+               gcc, g++, gettext
 
-Package: kano-toolset
+Package: kano-splash
 Architecture: any
-Depends: ${misc:Depends}, python-gtk2, python-webkit,
-         fping, python, zenity, bc, ifplugd, python-yaml, python-pyinotify,
-         resolvconf, libpng12-0, libraspberrypi-bin, procps, x11-utils, dbus,
-         wmctrl, libc-bin, libkano-networking, kano-i18n, iw, wireless-regdb, crda
-Replaces: kano-init (<< 1.0-46)
-Breaks: kano-init (<< 1.0-46)
-Description: Collection of tools for Kanux
- Contains mostly generic tools that are used at many places in Kano OS.
-
-Package: libkano-python
-Architecture: any
-Depends: ${misc:Depends},
-         python
-Description: Python helper libraries
- Libraries to help with Python interfacing
-
-Package: libkano-python-dbg
-Architecture: any
-Depends: ${misc:Depends},
-         python
-Description: Python helper libraries with debug symbols
- Libraries to help with Python interfacing
-
-Package: libkano-python-dev
-Architecture: any
-Depends: ${misc:Depends},
-         python-dev,
-         libkano-python (= ${source:Version})
-Description: Development versions of python helper libraries
- Development libraries to help with Python interfacing
-
-Package: libkano
-Architecture: any
-Depends: ${misc:Depends},
-         python,
-         libkano-python
-Description: Libraries for the 'kano' module
- Libraries to interface with the 'kano' Python module
-
-Package: libkano-dbg
-Architecture: any
-Depends: ${misc:Depends},
-         python,
-         libkano-python
-Description: Libraries for the 'kano' module with debug symbols
- Libraries to interface with the 'kano' Python module with debug symbols
-
-Package: libkano-dev
-Architecture: any
-Depends: ${misc:Depends},
-         python,
-         libkano-python-dev,
-         libkano (= ${source:Version})
-Description: Development libraries for the 'kano' module
- Development libraries to interface with the 'kano' Python module
-
-Package: libkano-networking
-Architecture: any
-Breaks: kano-toolset (<< 3.1.0-1)
-Replaces: kano-toolset (<< 3.1.0-1)
-Depends: ${misc:Depends}
-Description: Networking helper functions
- Libraries supply and interface with networking functionality
-
-Package: libkano-networking-dbg
-Architecture: any
-Depends: ${misc:Depends}
-Description: Networking helper functions with debug symbols
- Libraries supply and interface with networking functionality
-
-Package: libkano-networking-dev
-Architecture: any
-Depends: ${misc:Depends},
-         libkano-networking (= ${source:Version})
-Description: Networking helper functions
- Libraries supply and interface with networking functionality
-
-Package: libparson
-Architecture: any
-Depends: ${misc:Depends}
-Description: JSON library
- JSON library by Krzysztof Gabis
-
-Package: libparson-dbg
-Architecture: any
-Depends: ${misc:Depends}
-Description: Debug version of JSON library
- Debug version of JSON library by Krzysztof Gabis
-
-Package: libparson-dev
-Architecture: any
-Depends: ${misc:Depends},
-         libparson (= ${source:Version})
-Description: Dev version of JSON library
- Dev version of JSON library by Krzysztof Gabis
-
-Package: kano-toolset-i18n-orig
-Architecture: all
-Description: Data for working on translations of kano-toolset
-Multi-Arch: foreign
+Depends: ${misc:Depends}, libpng12-0, libraspberrypi-bin, procps, x11-utils, dbus, libkano-c-logging
+Replaces: kano-toolset (<< 3.15.0-1)
+Breaks: kano-toolset (<< 3.15.0-1)
+Description: Splash image loader
+  A splash image and animation loader using dispmanx
