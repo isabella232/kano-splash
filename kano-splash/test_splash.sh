@@ -1,4 +1,4 @@
-#!/usr/bin/kano-splash /usr/share/kano-toolset/animations/davey /bin/bash
+#!/usr/bin/kano-splash /usr/share/kano-splash/animations/davey /bin/bash
 
 echo "Pausing..."
 sleep 15

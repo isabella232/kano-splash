@@ -67,7 +67,7 @@ typedef struct _DEFAULT_ANIMATIONS {
 } DEFAULT_ANIMATIONS;
 
 DEFAULT_ANIMATIONS animations[] = {
-    { "loader-animation", "/usr/share/kano-toolset/kano-splash/splash-animation-loader" }
+    { "loader-animation", "/usr/share/kano-splash/splash-animation-loader" }
 };
 
 //-------------------------------------------------------------------------

@@ -5,7 +5,7 @@ import build_deb_pkg
 import python_test_env
 
 
-def repo_name = 'kano-toolset'
+def repo_name = 'kano-splash'
 
 
 stage ('Test') {
