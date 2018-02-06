@@ -4,15 +4,12 @@
 
 
 
-.PHONY: clean docs kano-splash
+.PHONY: clean kano-splash
 
 all: kano-splash
 
 clean:
-	cd docs && make clean
-
-docs:
-	cd docs && make all
+	true
 
 kano-splash:
 	cd kano-splash && make
