@@ -46,7 +46,7 @@
 #include "imageLayer.h"
 #include "loadpng.h"
 #include "get-start-time.h"
-#include "kano-log.h"
+#include "kano_c_logging.h"
 
 #include "bcm_host.h"
 

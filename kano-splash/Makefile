@@ -9,9 +9,9 @@ OBJS=kano-splash.o backgroundLayer.o imageLayer.o \
 	 loadpng.o image.o get-start-time.o
 BIN= kano-splash kano-get-start-time
 CFLAGS+=-Wall -g -O3  $(shell libpng-config --cflags)
-LDFLAGS+=-L/opt/vc/lib/ -lbcm_host -lm $(shell libpng-config --ldflags) -L../kano-logging -lkano-logging
+LDFLAGS+=-L/opt/vc/lib/ -lbcm_host -lm $(shell libpng-config --ldflags) -lkano_c_logging
 
-INCLUDES+=-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux -I../kano-logging 
+INCLUDES+=-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux
 
 all: $(BIN)
 
