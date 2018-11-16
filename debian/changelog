@@ -1,3 +1,9 @@
+kano-splash (4.2.0-0) unstable; urgency=low
+
+  * Parameterised the Dispmanx layer used when running the splash
+
+ -- Team Kano <dev@kano.me>  Fri, 16 Nov 2018 17:06:00 +0000
+
 kano-splash (3.15.0-0) unstable; urgency=low
 
   * Split from kano-toolset (3.15.0-0)

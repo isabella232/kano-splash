@@ -3,7 +3,7 @@
 // The MIT License (MIT)
 //
 // Copyright (c) 2013 Andrew Duncan
-// Copyright (c) 2015 Kano Computing Ltd.
+// Copyright (c) 2015-2018 Kano Computing Ltd.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the
@@ -72,13 +72,14 @@ DEFAULT_ANIMATIONS animations[] = {
 
 //-------------------------------------------------------------------------
 
-void usage(uint16_t timeout)
+void usage(uint16_t timeout, uint16_t layer)
 {
-  fprintf(stderr, "Usage: kano-splash-start [-b <RGBA>] [ -t <timeout> ] [ -d 1|0 ] <file.png | animation folder>\n");
-  fprintf(stderr, "    -b - set background colour 16 bit RGBA, example -b 0f00 is transparent red\n");
-  fprintf(stderr, "    -t - timeout in seconds - default is %d\n", timeout);
-  fprintf(stderr, "    -d - enable console debug logs with -d 1, default is off\n");
+  fprintf(stderr, "Usage: kano-splash-start [-b <RGBA>] [ -t <timeout> ] [ -d 1|0 ] [ -z <layer> ] <file.png | animation folder>\n");
+  fprintf(stderr, "    -b   set background colour 16 bit RGBA, example -b 0f00 is transparent red\n");
+  fprintf(stderr, "    -t   timeout in seconds - default is %d\n", timeout);
+  fprintf(stderr, "    -d   enable console debug logs with -d 1, default is off\n");
   fprintf(stderr, "         e.g. 0x000F is opaque black\n");
+  fprintf(stderr, "    -z   dispmanx layer index - default is %d\n", layer);
 
   exit(EXIT_FAILURE);
 }
@@ -90,7 +91,7 @@ DISPMANX_DISPLAY_HANDLE_T display_init(sigset_t *pwaitfor)
     }
     else {
         // don't allow us to be killed, because this causes a videocore memory leak
-        signal(SIGKILL, SIG_IGN); 
+        signal(SIGKILL, SIG_IGN);
         sigaddset(pwaitfor, SIGALRM);
         sigprocmask(SIG_BLOCK, pwaitfor, NULL); // switch off ALRM in case we are sent it before we want
     }
@@ -107,7 +108,8 @@ DISPMANX_DISPLAY_HANDLE_T display_init(sigset_t *pwaitfor)
 }
 
 int display_animation (DISPMANX_DISPLAY_HANDLE_T display, sigset_t *pwaitfor,
-                       char *animation_directory, uint16_t timeout, uint16_t background, int looping, int debug)
+                       char *animation_directory, uint16_t timeout, uint16_t layer,
+                       uint16_t background, int looping, int debug)
 {
     int error=0;
     struct dirent **namelist;
@@ -181,15 +183,14 @@ int display_animation (DISPMANX_DISPLAY_HANDLE_T display, sigset_t *pwaitfor,
         fprintf(stderr, "unable to load frame: %s\n", next_frame);
         error = 2;
         goto close_imagelayer;
-        
+
     }
-    // TODO: parametrize "1" which is the layer number
-    createResourceImageLayer(&imageLayer, 1);
+    createResourceImageLayer(&imageLayer, layer);
 
     // position the background and the first frame, centered on the screen
     xOffset = (info.width - imageLayer.image.width) / 2;
     yOffset = (info.height - imageLayer.image.height) / 2;
-    
+
     DISPMANX_UPDATE_HANDLE_T update = vc_dispmanx_update_start(0);
     if (!update) {
         error = -1;
@@ -283,9 +284,9 @@ close_imagelayer:
     destroyImageLayer(&imageLayer);
 
 close_background:
-    
+
     destroyBackgroundLayer(&backgroundLayer);
-    
+
 close_display:
 
     vc_dispmanx_display_close(display);
@@ -308,7 +309,8 @@ end:
 }
 
 int display_image (DISPMANX_DISPLAY_HANDLE_T display, sigset_t *pwaitfor,
-                   char *file, uint16_t timeout, uint16_t background, int debug)
+                   char *file, uint16_t timeout, uint16_t layer,
+                   uint16_t background, int debug)
 {
     int error = 0;
 
@@ -339,11 +341,9 @@ int display_image (DISPMANX_DISPLAY_HANDLE_T display, sigset_t *pwaitfor,
 
     }
 
-    // TODO: parametrize "1" which is the layer number
-
-    okay = createResourceImageLayer(&imageLayer, 1);
+    okay = createResourceImageLayer(&imageLayer, layer);
     if(!okay){
-	 
+
         kano_log_error("kano-splash: unable to create resource \n");
         error=1;
 	goto close_background;
@@ -368,12 +368,12 @@ int display_image (DISPMANX_DISPLAY_HANDLE_T display, sigset_t *pwaitfor,
         {
             outWidth = info.width;
             outHeight = (imageLayer.image.height * info.width)
-                         / imageLayer.image.width; 
+                         / imageLayer.image.width;
         }
         else
         {
             outWidth = (imageLayer.image.width * info.height)
-                        / imageLayer.image.height; 
+                        / imageLayer.image.height;
             outHeight = info.height;
         }
     }
@@ -398,7 +398,7 @@ int display_image (DISPMANX_DISPLAY_HANDLE_T display, sigset_t *pwaitfor,
 	 error = 1;
 	 goto close_imagelayer;
     }
-	 
+
 
     bool res=addElementBackgroundLayer(&backgroundLayer, display, update);
     if(!res) {
@@ -426,9 +426,9 @@ int display_image (DISPMANX_DISPLAY_HANDLE_T display, sigset_t *pwaitfor,
     struct timespec ts;
     ts.tv_sec=timeout;
     ts.tv_nsec=0;
-      
+
     sigtimedwait(pwaitfor,NULL, &ts);
-   
+
     //---------------------------------------------------------------------
 
 close_imagelayer:
@@ -436,11 +436,11 @@ close_imagelayer:
     destroyImageLayer(&imageLayer);
 
 close_background:
-    
+
     destroyBackgroundLayer(&backgroundLayer);
 
 close_display:
-    
+
     result = vc_dispmanx_display_close(display);
 
     //---------------------------------------------------------------------
@@ -454,6 +454,7 @@ int main(int argc, char *argv[])
 {
     uint16_t background = 0x000F;
     uint16_t timeout = 15;
+    uint16_t layer = 1;
     char *real_interp;
     char *file;
     char *binary;
@@ -467,11 +468,11 @@ int main(int argc, char *argv[])
 
     binary=basename(argv[0]);
     is_interp=strcmp(binary,"kano-splash")==0;
-      
+
     if(!is_interp){
         int opt=0;
-        
-        while ((opt = getopt(argc, argv, "b:t:d:")) != -1)
+
+        while ((opt = getopt(argc, argv, "b:t:d:z:")) != -1)
         {
             switch(opt)
             {
@@ -482,23 +483,27 @@ int main(int argc, char *argv[])
             case 'b':
                 background = strtol(optarg, NULL, 16);
                 break;
-        
+
             case 't':
                 timeout = strtol(optarg, NULL, 10);
                 break;
 
+            case 'z':
+                layer = strtol(optarg, NULL, 10);
+                break;
+
             default:
-                usage(timeout);
+                usage(timeout, layer);
                 break;
             }
         }
         file=argv[optind];
 
         //---------------------------------------------------------------------
-   
+
         if (optind >= argc)
         {
-            usage(timeout);
+            usage(timeout, layer);
         }
     }
     else{
@@ -509,37 +514,37 @@ int main(int argc, char *argv[])
         // argv[1] arguments on the #! line, if any (otherwise skipped..)
         // argv[2] the script we are called on
         // argv[3..] command line arguments
-    
+
         // we expect argv[1] to contain the filename followed by the next interpreter we want to invoke and
         // its arguments. so we extract these and then do the following mapping:
-    
+
         // splash file = arg[1][0]
         // argv[0] = argv[1][1..]
-        // 
-        // This leaves the command line 
-        
-    
-        background=0; // full transparency        
-    
+        //
+        // This leaves the command line
+
+
+        background=0; // full transparency
+
         if(argc<2) {
           fprintf(stderr,"Insufficient arguments\n");
           exit(1);
         }
-    
+
         file=strsep(&argv[1]," ");
-    
+
         if(!file) {
-          fprintf(stderr,"filename is NULL \n");      
+          fprintf(stderr,"filename is NULL \n");
 	  exit(1);
         }
-    
+
         real_interp=strsep(&argv[1]," ");
-          
+
         if(!real_interp) {
           fprintf(stderr,"real interpreter is not specified!\n");
           exit(1);
         }
-    
+
         if(argv[1]==0){
           argv++;
           argc--;
@@ -548,7 +553,7 @@ int main(int argc, char *argv[])
         argv[0]=real_interp;
 
         launch_command = true;
-    
+
     }
 
     image_child_pid = fork();
@@ -575,10 +580,10 @@ int main(int argc, char *argv[])
             stat (file, &file_type);
             if (S_ISDIR(file_type.st_mode)) {
                 // TODO: parametrize loop mode - last function option
-                error = display_animation (display, &waitfor, file, timeout, background, 1, debug);
+                error = display_animation (display, &waitfor, file, timeout, layer, background, 1, debug);
             }
             else if (S_ISREG(file_type.st_mode)) {
-                error = display_image (display, &waitfor, file, timeout, background, debug);
+                error = display_image (display, &waitfor, file, timeout, layer, background, debug);
             }
             else {
                 error = 2; // file not found or not accessible
@@ -601,9 +606,9 @@ int main(int argc, char *argv[])
 	// launch command
         command_child_pid=fork();
         if(command_child_pid==0){
-          execvp(real_interp,argv);	
+          execvp(real_interp,argv);
         }
-    }      
+    }
     error = waitpid(image_child_pid, &status, 0);
 
     if(command_child_pid){
